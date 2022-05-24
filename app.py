@@ -5,15 +5,10 @@ from dash import dash_table as dt
 import plotly.express as px
 from dash import Dash, html, dcc, Input, Output
 
+#DATAFRAME 
 df = pd.read_csv('london_weather.csv')
 
-fig1 = px.scatter(df, x = 'min_temp', y = 'snow_depth')
-fig2 = px.scatter(df, x = 'pressure', y = 'snow_depth')
-fig3 = px.scatter(df, x = 'sunshine', y = 'snow_depth')
-fig4 = px.scatter(df, x = 'precipitation', y = 'snow_depth')
-fig5 = px.scatter(df, x = 'global_radiation', y = 'snow_depth')
-fig6 = px.scatter(df, x = 'cloud_cover', y = 'snow_depth')
-
+#APP ENTITIES 
 date_selector = dcc.RangeSlider(
     id = 'date_range_slider',
     min = min(df['date']),
@@ -30,20 +25,22 @@ date_selector = dcc.RangeSlider(
     value = [19790102, 20201230]
 )
 
+#APP INIT
 app = dash.Dash(__name__)
 
+#APP LAYOUT
 app.layout = html.Div([
     html.H1('London Weather'),
     html.Div(date_selector),
-    dcc.Graph(id = 'temp_snow_chart', figure = fig1), 
-    dcc.Graph(id = 'pressure_snow_chart', figure = fig2), 
-    dcc.Graph(id = 'sunshine_snow_chart', figure = fig3), 
-    dcc.Graph(id = 'precipitation_snow_chart', figure = fig4), 
-    dcc.Graph(id = 'global_radiation_snow_chart', figure = fig5), 
-    dcc.Graph(id = 'cloud_snow_chart', figure = fig6), 
+    dcc.Graph(id = 'temp_snow_chart'), 
+    dcc.Graph(id = 'pressure_snow_chart'), 
+    dcc.Graph(id = 'sunshine_snow_chart'), 
+    dcc.Graph(id = 'precipitation_snow_chart'), 
+    dcc.Graph(id = 'global_radiation_snow_chart'), 
+    dcc.Graph(id = 'cloud_snow_chart'), 
     ])
 
-
+#CALLBACKS
 @app.callback(
     Output(component_id = 'temp_snow_chart', component_property = 'figure'),
     Output(component_id = 'pressure_snow_chart', component_property = 'figure'),
