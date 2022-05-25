@@ -1,9 +1,9 @@
-import requests
 import pandas as pd
 import dash
 from dash import dash_table as dt
 import plotly.express as px
-from dash import Dash, html, dcc, Input, Output
+from dash import html, dcc, Input, Output
+import dash_bootstrap_components as dbc
 
 #DATAFRAME 
 df = pd.read_csv('london_weather.csv')
@@ -26,23 +26,47 @@ date_selector = dcc.RangeSlider(
 )
 
 #APP INIT
-app = dash.Dash(__name__)
+app = dash.Dash(external_stylesheets=[dbc.themes.LUX])
 
 #APP LAYOUT
 app.layout = html.Div([
-    html.H1('London Weather'),
-    dcc.Markdown('''
-    ### This web application provides data on weather in London since 1979 until 2020.
-    ### Graphs provided below can be used to search for correlation between snow depth level and some other weather specifications. '''),
-    dcc.Markdown(''' Choose the time span: '''),
-    html.Div(date_selector),
-    dcc.Markdown(''' Choose the second weather specification: '''),
-    dcc.Dropdown(['temperature', 'sunshine', 'pressure', 'global radiation', 'precipitation', 'cloud cover'], 'min_temp', id='graph_dd', 
-    style={'margin-right': '825px'}),
-    dcc.Graph(id = 'snow_chart'), 
-    ], 
-        style={'margin-left': '80px', 
-                'margin-right': '80px'})
+    dbc.Row([
+        dbc.Col(),
+        dbc.Col(html.Div([html.H1('SNOW DEPTH')], style={'margin-top': '30px', 'margin-bottom': '30px'})),
+        dbc.Col(),
+    ]), 
+    dbc.Row(
+        dbc.Col(
+            dbc.Tabs([
+                dcc.Tab(label = 'DATA', children = [
+                    dbc.Row([
+                        html.Div(style={'margin-top': '15px', 'margin-bottom': '15px'}),
+                        dcc.Markdown(''' ##### Instruments for analyzing influence of different weather factors on snow depth level. Based on data on London weather years 1979-2020.'''),
+                        html.Div(style={'margin-top': '15px', 'margin-bottom': '15px'}),
+                        dcc.Markdown(''' Choose the time span: '''),
+                        html.Div(date_selector),
+                        html.Div(style={'margin-top': '30px', 'margin-bottom': '30px'}),
+                    ]), 
+                    dbc.Row([
+                        dbc.Col([
+                            html.Div(style={'margin-top': '55px'}),
+                            dcc.Markdown(''' Choose the second weather specification: '''),
+                            dcc.Dropdown(['temperature', 'sunshine', 'pressure', 'global radiation', 'precipitation', 'cloud cover'], 'min_temp', id='graph_dd')
+                        ]), 
+                        dbc.Col(dcc.Graph(id = 'snow_chart'), width=8),
+                    ])
+                ]), 
+                dcc.Tab(label = 'CREDITS', children = [
+                    html.Div(style={'margin-top': '30px'}),
+                    dcc.Markdown(''' ### Dataset: '''), 
+                    dcc.Markdown(''' https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data ''')
+                ]),
+            ]),
+        ), 
+    ), 
+], 
+style={'margin-left': '80px', 'margin-right': '80px'}
+)
 
 #CALLBACKS
 @app.callback(
