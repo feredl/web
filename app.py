@@ -38,10 +38,10 @@ app.layout = html.Div([
     dbc.Row(
         dbc.Col(
             dbc.Tabs([
-                dcc.Tab(label = 'DATA', children = [
+                dcc.Tab(label = 'TOOLS', children = [
                     dbc.Row([
                         html.Div(style={'margin-top': '15px', 'margin-bottom': '15px'}),
-                        dcc.Markdown(''' ##### Instruments for analyzing influence of different weather factors on snow depth level. Based on data on London weather years 1979-2020.'''),
+                        dcc.Markdown(''' ##### Tools for analyzing influence of different weather factors on snow depth level. Based on data on London weather years 1979-2020.'''),
                         html.Div(style={'margin-top': '15px', 'margin-bottom': '15px'}),
                         dcc.Markdown(''' Choose the time span: '''),
                         html.Div(date_selector),
@@ -56,10 +56,15 @@ app.layout = html.Div([
                         dbc.Col(dcc.Graph(id = 'snow_chart'), width=8),
                     ])
                 ]), 
+                dcc.Tab(label = 'DATA', children = [
+                    html.Div(style={'margin-top': '30px'}),
+                    dt.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns]),
+                    html.Div(style={'margin-top': '30px'}),
+                ]),
                 dcc.Tab(label = 'CREDITS', children = [
                     html.Div(style={'margin-top': '30px'}),
-                    dcc.Markdown(''' ### Dataset: '''), 
-                    dcc.Markdown(''' https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data ''')
+                    dcc.Markdown(''' ##### Dataset: '''), 
+                    dcc.Markdown('''  https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data''')
                 ]),
             ]),
         ), 
